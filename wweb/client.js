@@ -37,18 +37,18 @@ class WhatsAppClient {
         });
 
         this.client.on('ready', () => {
-            this.logger.info('WhatsApp Client is ready!');
+            this.logger.info(`WhatsApp Client ${this.clientId} is ready!`);
             this.qrCode = null;
             this.isReady = true;
         });
 
         this.client.on('remote_session_saved', () => {
-            this.logger.info('Remote session saved');
+            this.logger.info(`Remote session saved for client ${this.clientId}`);
             this.isReady = true;
         })
 
         this.client.on('qr', qr => {
-            this.logger.info('QR Code received, scan it.');
+            this.logger.info(`QR Code received, scan it. for client ${this.clientId}`);
             this.qrCode = qr;
         });
 
@@ -83,7 +83,7 @@ class WhatsAppClient {
      */
     async sendMessage(receiverId, message, delay = 0) {
         if (!this.isReady) {
-            throw new Error('WhatsApp client is not ready yet');
+            throw new Error(`WhatsApp client ${this.clientId} is not ready yet`);
         }
 
         const chatId = receiverId.includes('@') ? receiverId : `${receiverId}@c.us`; //by phone number > phone@c.us

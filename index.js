@@ -23,6 +23,7 @@ try {
 }
 
 const fastify = Fastify({
+    http2: true,
     logger: config.nodeEnv === 'development' ? {
         level: config.logLevel,
         transport: {
