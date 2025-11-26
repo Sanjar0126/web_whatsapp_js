@@ -9,19 +9,23 @@ class MongoStore {
 
     /** @param {{ session: string }} options */
     async sessionExists(options) {
-        let multiDeviceCollection = this.mongoose.connection.db.collection(`whatsapp-${options.session}.files`);
-        let hasExistingSession = await multiDeviceCollection.countDocuments();
+        let multiDeviceCollection = this.mongoose.connection.db.collection('whatsapp-session.files');
+        let hasExistingSession = await multiDeviceCollection.countDocuments({ filename: `${options.session}.zip` });
         return !!hasExistingSession;
     }
 
     /** @param {{ session: string, path: string }} options */
     async save(options) {
         var bucket = new this.mongoose.mongo.GridFSBucket(this.mongoose.connection.db, {
-            bucketName: `whatsapp-${options.session}`
+            bucketName: 'whatsapp-session'
         });
         await new Promise((resolve, reject) => {
             fs.createReadStream(`${options.session}.zip`)
-                .pipe(bucket.openUploadStream(`${options.session}.zip`))
+                .pipe(bucket.openUploadStream(`${options.session}.zip`, {
+                    metadata: {
+                        client_id: options.session
+                    }
+                }))
                 .on('error', err => reject(err))
                 .on('close', () => resolve());
         });
@@ -32,7 +36,7 @@ class MongoStore {
     /** @param {{ session: string, path: string }} options */
     async extract(options) {
         var bucket = new this.mongoose.mongo.GridFSBucket(this.mongoose.connection.db, {
-            bucketName: `whatsapp-${options.session}`
+            bucketName: 'whatsapp-session'
         });
         return new Promise((resolve, reject) => {
             bucket.openDownloadStreamByName(`${options.session}.zip`)
@@ -45,7 +49,7 @@ class MongoStore {
     /** @param {{ session: string }} options */
     async delete(options) {
         var bucket = new this.mongoose.mongo.GridFSBucket(this.mongoose.connection.db, {
-            bucketName: `whatsapp-${options.session}`
+            bucketName: 'whatsapp-session'
         });
         const documents = await bucket.find({
             filename: `${options.session}.zip`
