@@ -1,0 +1,12 @@
+node_modules/
+.env
+*.log
+.DS_Store
+dist/
+coverage/
+.vscode/
+.idea/
+.wwebjs_cache/
+wweb-auth-session/
+.github
+.wwebjs_auth
