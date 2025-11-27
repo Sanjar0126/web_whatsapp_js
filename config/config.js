@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export const config = {
-    port: process.env.PORT || 3000,
+    port: process.env.PORT || 8008,
     host: process.env.HOST || '0.0.0.0',
     logLevel: process.env.LOG_LEVEL || 'info',
     corsOrigin: process.env.CORS_ORIGIN || '*',
