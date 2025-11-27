@@ -16,13 +16,11 @@ export default async function connectRoutes(fastify, options) {
                         `Received GetWhatsappClientStatus: ${request.shipperId}`
                     );
 
-                    const client = fastify.whatsappManager.getClient(request.shipperId);
+                    var client = fastify.whatsappManager.getClient(request.shipperId);
                     if (!client) {
                         fastify.log.error(`Client ${request.shipperId} not found`);
-                        throw new ConnectError(
-                            `Client ${request.shipperId} not found`,
-                            Code.NotFound
-                        );
+                        await fastify.whatsappManager.createClient(request.shipperId);
+                        client = fastify.whatsappManager.getClient(request.shipperId);
                     }
 
                     var clientQrCode = client.getQRCode();
