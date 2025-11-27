@@ -6,7 +6,7 @@ import { obfuscateText } from '../helper/obfuscate.js';
 export default async function connectRoutes(fastify, options) {
     fastify.register(fastifyConnectPlugin, {
         jsonOptions: {
-            emitDefaultValues: true,
+            alwaysEmitImplicit: true,
             useProtoFieldName: true,
         },
         routes(router) {
