@@ -24,18 +24,17 @@ try {
 
 const fastify = Fastify({
     http2: true,
-    logger: config.nodeEnv === 'development' ? {
+    logger: {
         level: config.logLevel,
         transport: {
             target: 'pino-pretty',
             options: {
                 translateTime: 'HH:MM:ss Z',
                 ignore: 'pid,hostname',
+                singleLine: true
             },
-        },
-    } : {
-        level: config.logLevel,
-    },
+        }
+    }
 });
 
 await fastify.register(helmet, {
