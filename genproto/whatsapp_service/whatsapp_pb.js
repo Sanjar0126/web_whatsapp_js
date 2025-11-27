@@ -8,7 +8,7 @@ import { fileDesc, messageDesc } from "@bufbuild/protobuf/codegenv2";
  * Describes the file whatsapp.proto.
  */
 export const file_whatsapp = /*@__PURE__*/
-  fileDesc("Cg53aGF0c2FwcC5wcm90bxIQd2hhdHNhcHBfc2VydmljZSJcChpQdXNoV2hhdHNhcHBNZXNzYWdlUmVxdWVzdBISCgpzaGlwcGVyX2lkGAEgASgJEgwKBHRleHQYAiABKAkSDQoFcGhvbmUYAyABKAkSDQoFcGhvdG8YBCABKAlCG1oZZ2VucHJvdG8vd2hhdHNhcHBfc2VydmljZWIGcHJvdG8z");
+  fileDesc("Cg53aGF0c2FwcC5wcm90bxIQd2hhdHNhcHBfc2VydmljZSJcChpQdXNoV2hhdHNhcHBNZXNzYWdlUmVxdWVzdBISCgpzaGlwcGVyX2lkGAEgASgJEgwKBHRleHQYAiABKAkSDQoFcGhvbmUYAyABKAkSDQoFcGhvdG8YBCABKAkiSAoUV2hhdHNhcHBDbGllbnRTdGF0dXMSEAoIaXNfcmVhZHkYASABKAgSEgoKaGFzX2NsaWVudBgCIAEoCBIKCgJxchgDIAEoCSIgCgpHZXRSZXF1ZXN0EhIKCnNoaXBwZXJfaWQYASABKAlCG1oZZ2VucHJvdG8vd2hhdHNhcHBfc2VydmljZWIGcHJvdG8z");
 
 /**
  * Describes the message whatsapp_service.PushWhatsappMessageRequest.
@@ -16,4 +16,18 @@ export const file_whatsapp = /*@__PURE__*/
  */
 export const PushWhatsappMessageRequestSchema = /*@__PURE__*/
   messageDesc(file_whatsapp, 0);
+
+/**
+ * Describes the message whatsapp_service.WhatsappClientStatus.
+ * Use `create(WhatsappClientStatusSchema)` to create a new message.
+ */
+export const WhatsappClientStatusSchema = /*@__PURE__*/
+  messageDesc(file_whatsapp, 1);
+
+/**
+ * Describes the message whatsapp_service.GetRequest.
+ * Use `create(GetRequestSchema)` to create a new message.
+ */
+export const GetRequestSchema = /*@__PURE__*/
+  messageDesc(file_whatsapp, 2);
 

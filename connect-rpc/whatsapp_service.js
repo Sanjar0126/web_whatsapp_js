@@ -5,8 +5,34 @@ import { obfuscateText } from '../helper/obfuscate.js';
 
 export default async function connectRoutes(fastify, options) {
     fastify.register(fastifyConnectPlugin, {
+        jsonOptions: {
+            emitDefaultValues: true,
+            useProtoFieldName: true,
+        },
         routes(router) {
             router.service(WhatsappService, {
+                async getWhatsappClientStatus(request, context) {
+                    fastify.log.info(
+                        `Received GetWhatsappClientStatus: ${request.shipperId}`
+                    );
+
+                    const client = fastify.whatsappManager.getClient(request.shipperId);
+                    if (!client) {
+                        fastify.log.error(`Client ${request.shipperId} not found`);
+                        throw new ConnectError(
+                            `Client ${request.shipperId} not found`,
+                            Code.NotFound
+                        );
+                    }
+
+                    var clientQrCode = client.getQRCode();
+
+                    return {
+                        qr: clientQrCode || "",
+                        isReady: client.getStatus().isReady,
+                        hasClient: client.getStatus().hasClient
+                    }
+                },
                 async pushWhatsappMessage(request, context) {
                     fastify.log.info(
                         `Received PushWhatsappMessage: ${request.shipperId} ${request.phone}`
