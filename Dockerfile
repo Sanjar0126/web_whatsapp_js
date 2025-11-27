@@ -1,26 +1,40 @@
 FROM node:24.11.1-slim
 
-WORKDIR /app
-
-# Install system dependencies (for Puppeteer/Chromium)
+# Install Chrome + fonts
 RUN apt-get update \
     && apt-get install -y wget gnupg \
     && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list' \
+    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
+        >> /etc/apt/sources.list.d/google.list' \
     && apt-get update \
-    && apt-get install -y google-chrome-stable fonts-ipafont-gothic fonts-wqy-zenhei fonts-thai-tlwg fonts-kacst fonts-freefont-ttf libxss1 \
-      --no-install-recommends \
+    && apt-get install -y google-chrome-stable \
+        fonts-ipafont-gothic \
+        fonts-wqy-zenhei \
+        fonts-thai-tlwg \
+        fonts-kacst \
+        fonts-freefont-ttf \
+        libxss1 \
+        --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
+# Install puppeteer globally and create pptruser
+RUN yarn global add puppeteer \
+    && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
+    && mkdir -p /home/pptruser/Downloads \
+    && chown -R pptruser:pptruser /home/pptruser \
+    && mkdir -p /usr/local/share/.config \
+    && chown -R pptruser:pptruser /usr/local/share/.config
+
+# Set up project
+WORKDIR /app
+
 COPY package.json yarn.lock ./
+
 RUN yarn install --frozen-lockfile
 
 COPY . .
 
-# Set environment variables for Puppeteer to use system Chromium
-ENV PUPPETEER_SKIP_DOWNLOAD=true \
-    NODE_ENV=production
+# to run Chrome without --no-sandbox
+# USER pptruser
 
-EXPOSE 3000
-
-CMD ["yarn", "start"]
+CMD ["node", "./index.js"]
