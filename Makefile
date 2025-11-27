@@ -38,8 +38,11 @@ update-proto-module:
 # 	sudo cp -R genproto ${GOROOT}/src
 # 	mv genproto vendor
 
+proto-gen:
+	npx buf generate
 
-copy-proto-module: # for node.js services
-	rm -rf ${CURRENT_DIR}/protos
-	mkdir ${CURRENT_DIR}/protos
-	cp -R delever_protos/*_service* ${CURRENT_DIR}/protos
+
+# copy-proto-module: # for node.js services
+# 	rm -rf ${CURRENT_DIR}/protos
+# 	mkdir ${CURRENT_DIR}/protos
+# 	cp -R delever_protos/*_service* ${CURRENT_DIR}/protos
