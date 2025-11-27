@@ -33,7 +33,11 @@ class WhatsAppClient {
                 store: this.store,
                 backupSyncIntervalMs: 300000,
                 clientId: this.clientId
-            })
+            }),
+            puppeteer: {
+                headless: true,
+                args: ['--no-sandbox', '--disable-setuid-sandbox']
+            }
         });
 
         this.client.on('ready', () => {
