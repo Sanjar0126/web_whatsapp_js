@@ -1,4 +1,3 @@
-# Build stage
 FROM node:24.11.1-alpine AS builder
 
 # Enable pnpm
@@ -6,13 +5,11 @@ RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-# Copy package files
 COPY package.json pnpm-lock.yaml ./
 
 # Install dependencies
 RUN pnpm install --frozen-lockfile --prod
 
-# Production stage
 FROM node:24.11.1-alpine
 
 # Install Chromium
@@ -33,7 +30,6 @@ WORKDIR /app
 # Copy dependencies from builder
 COPY --from=builder /app/node_modules ./node_modules
 
-# Copy app files
 COPY package.json ./
 COPY . .
 
@@ -44,6 +40,6 @@ RUN addgroup -g 1001 -S nodejs && \
 
 USER nodejs
 
-EXPOSE 3000
+EXPOSE 8008
 
 CMD ["node", "index.js"]

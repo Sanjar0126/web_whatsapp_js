@@ -10,30 +10,34 @@ import path from 'path';
 import { connectDB } from './storage/connection.js';
 
 const cacheDir = path.join(process.cwd(), '.wwebjs_cache');
-try {
-    const files = await fs.readdir(cacheDir);
-    await Promise.all(
-        files.map(file => fs.rm(path.join(cacheDir, file), { recursive: true, force: true }))
-    );
-    console.log('Cleared .wwebjs_cache folder contents');
-} catch (err) {
-    if (err.code !== 'ENOENT') {
-        console.error('Failed to clear .wwebjs_cache:', err.message);
+
+async function clearCache() {
+    try {
+        const files = await fs.readdir(cacheDir);
+        await Promise.all(
+            files.map(file => fs.rm(path.join(cacheDir, file), { recursive: true, force: true }))
+        );
+        console.log('Cleared .wwebjs_cache folder contents');
+    } catch (err) {
+        if (err.code !== 'ENOENT') {
+            console.error('Failed to clear .wwebjs_cache:', err.message);
+        }
     }
 }
+
 
 const fastify = Fastify({
     http2: true,
     logger: {
         level: config.logLevel,
-        transport: {
-            target: 'pino-pretty',
-            options: {
-                translateTime: 'HH:MM:ss Z',
-                ignore: 'pid,hostname',
-                singleLine: true
-            },
-        }
+        // transport: {
+        //     target: 'pino-pretty',
+        //     options: {
+        //         translateTime: 'HH:MM:ss Z',
+        //         ignore: 'pid,hostname',
+        //         singleLine: true
+        //     },
+        // }
     }
 });
 
@@ -67,6 +71,7 @@ fastify.setErrorHandler((error, request, reply) => {
 
 const start = async () => {
     try {
+        await clearCache();
         await connectDB();
 
         const whatsappManager = new WhatsAppClientManager(fastify.log);

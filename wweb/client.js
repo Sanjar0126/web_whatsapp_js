@@ -32,11 +32,15 @@ class WhatsAppClient {
             authStrategy: new RemoteAuth({
                 store: this.store,
                 backupSyncIntervalMs: 300000,
-                clientId: this.clientId
+                clientId: this.clientId,
             }),
             puppeteer: {
                 headless: true,
-                args: ['--no-sandbox', '--disable-setuid-sandbox']
+                pipe: true,
+                args: [
+                    '--no-sandbox',
+                    '--disable-setuid-sandbox',
+                ]
             }
         });
 
