@@ -1,37 +1,49 @@
-FROM node:24.11.1-slim
+# Build stage
+FROM node:24.11.1-alpine AS builder
 
-RUN apt-get update \
-    && apt-get install -y wget gnupg \
-    && wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add - \
-    && sh -c 'echo "deb [arch=amd64] http://dl.google.com/linux/chrome/deb/ stable main" \
-    >> /etc/apt/sources.list.d/google.list' \
-    && apt-get update \
-    && apt-get install -y google-chrome-stable \
-    libxss1 \
-    --no-install-recommends \
-    && rm -rf /var/lib/apt/lists/*
-    # fonts-ipafont-gothic \
-    # fonts-wqy-zenhei \
-    # fonts-thai-tlwg \
-    # fonts-kacst \
-    # fonts-freefont-ttf \
-
-RUN yarn global add puppeteer 
-    # && groupadd -r pptruser && useradd -r -g pptruser -G audio,video pptruser \
-    # && mkdir -p /home/pptruser/Downloads \
-    # && chown -R pptruser:pptruser /home/pptruser \
-    # && mkdir -p /usr/local/share/.config \
-    # && chown -R pptruser:pptruser /usr/local/share/.config
+# Enable pnpm
+RUN corepack enable && corepack prepare pnpm@latest --activate
 
 WORKDIR /app
 
-COPY package.json yarn.lock ./
+# Copy package files
+COPY package.json pnpm-lock.yaml ./
 
-RUN yarn install --frozen-lockfile
+# Install dependencies
+RUN pnpm install --frozen-lockfile --prod
 
+# Production stage
+FROM node:24.11.1-alpine
+
+# Install Chromium
+RUN apk add --no-cache \
+    chromium \
+    nss \
+    freetype \
+    harfbuzz \
+    ca-certificates \
+    ttf-freefont \
+    && rm -rf /var/cache/apk/*
+
+ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser 
+
+WORKDIR /app
+
+# Copy dependencies from builder
+COPY --from=builder /app/node_modules ./node_modules
+
+# Copy app files
+COPY package.json ./
 COPY . .
 
-# to run Chrome without --no-sandbox
-# USER pptruser
+# Run as non-root user
+RUN addgroup -g 1001 -S nodejs && \
+    adduser -S nodejs -u 1001 && \
+    chown -R nodejs:nodejs /app
 
-CMD ["yarn", "start"]
+USER nodejs
+
+EXPOSE 3000
+
+CMD ["node", "index.js"]
