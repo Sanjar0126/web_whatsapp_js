@@ -71,7 +71,6 @@ A Node.js application acting as a wrapper around [whatsapp-web.js](https://wwebj
 
 2.  **`PushWhatsappMessage`**
     -   Sends a message.
-    -   **Feature**: Automatically applies text obfuscation.
 
 ## 🗂️ Project Structure
 
