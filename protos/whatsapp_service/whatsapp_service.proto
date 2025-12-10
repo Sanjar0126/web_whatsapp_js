@@ -1,0 +1,11 @@
+syntax = "proto3";
+
+package whatsapp_service;
+
+import "google/protobuf/empty.proto";
+import "whatsapp.proto";
+
+service WhatsappService {
+    rpc PushWhatsappMessage(PushWhatsappMessageRequest) returns (google.protobuf.Empty) {}
+    rpc GetWhatsappClientStatus(GetRequest) returns (WhatsappClientStatus) {}
+}

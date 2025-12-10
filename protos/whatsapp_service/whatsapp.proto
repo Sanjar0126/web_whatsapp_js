@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package whatsapp_service;
+
+message PushWhatsappMessageRequest {
+  string client_id = 1;
+  string text = 2;
+  string phone = 3;
+  string photo = 4;
+}
+
+message WhatsappClientStatus {
+  bool is_ready = 1;
+  bool has_client = 2;
+  string qr = 3;
+}
+
+message GetRequest {
+    string client_id = 1;
+}

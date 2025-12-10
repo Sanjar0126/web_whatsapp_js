@@ -4,13 +4,13 @@
 
 import { fileDesc, serviceDesc } from "@bufbuild/protobuf/codegenv2";
 import { file_google_protobuf_empty } from "@bufbuild/protobuf/wkt";
-import { file_whatsapp } from "./whatsapp_pb.js";
+import { file_whatsapp } from "./whatsapp_pb";
 
 /**
  * Describes the file whatsapp_service.proto.
  */
 export const file_whatsapp_service = /*@__PURE__*/
-  fileDesc("ChZ3aGF0c2FwcF9zZXJ2aWNlLnByb3RvEhB3aGF0c2FwcF9zZXJ2aWNlMtMBCg9XaGF0c2FwcFNlcnZpY2USXQoTUHVzaFdoYXRzYXBwTWVzc2FnZRIsLndoYXRzYXBwX3NlcnZpY2UuUHVzaFdoYXRzYXBwTWVzc2FnZVJlcXVlc3QaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiABJhChdHZXRXaGF0c2FwcENsaWVudFN0YXR1cxIcLndoYXRzYXBwX3NlcnZpY2UuR2V0UmVxdWVzdBomLndoYXRzYXBwX3NlcnZpY2UuV2hhdHNhcHBDbGllbnRTdGF0dXMiAEIbWhlnZW5wcm90by93aGF0c2FwcF9zZXJ2aWNlYgZwcm90bzM", [file_google_protobuf_empty, file_whatsapp]);
+  fileDesc("ChZ3aGF0c2FwcF9zZXJ2aWNlLnByb3RvEhB3aGF0c2FwcF9zZXJ2aWNlMtMBCg9XaGF0c2FwcFNlcnZpY2USXQoTUHVzaFdoYXRzYXBwTWVzc2FnZRIsLndoYXRzYXBwX3NlcnZpY2UuUHVzaFdoYXRzYXBwTWVzc2FnZVJlcXVlc3QaFi5nb29nbGUucHJvdG9idWYuRW1wdHkiABJhChdHZXRXaGF0c2FwcENsaWVudFN0YXR1cxIcLndoYXRzYXBwX3NlcnZpY2UuR2V0UmVxdWVzdBomLndoYXRzYXBwX3NlcnZpY2UuV2hhdHNhcHBDbGllbnRTdGF0dXMiAGIGcHJvdG8z", [file_google_protobuf_empty, file_whatsapp]);
 
 /**
  * @generated from service whatsapp_service.WhatsappService
