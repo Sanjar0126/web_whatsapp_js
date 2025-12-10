@@ -9,7 +9,6 @@ export const config = {
     logLevel: process.env.LOG_LEVEL || 'info',
     corsOrigin: process.env.CORS_ORIGIN || '*',
     nodeEnv: process.env.NODE_ENV || 'development',
-    metaAccessToken: process.env.META_ACCESS_TOKEN || '',
 
     mongodbHost: process.env.MONGODB_HOST || '127.0.0.1',
     mongodbPort: process.env.MONGODB_PORT || '27017',

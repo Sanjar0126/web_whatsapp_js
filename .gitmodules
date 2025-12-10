@@ -1,3 +1,0 @@
-[submodule "delever_protos"]
-	path = delever_protos
-	url = ssh://git@gitlab.delever.uz:2222/delever/delever_protos.git

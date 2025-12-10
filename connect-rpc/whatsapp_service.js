@@ -13,25 +13,25 @@ export default async function connectRoutes(fastify, options) {
             router.service(WhatsappService, {
                 async getWhatsappClientStatus(request, context) {
                     fastify.log.info(
-                        `Received GetWhatsappClientStatus: ${request.shipperId}`
+                        `Received GetWhatsappClientStatus: ${request.clientId}`
                     );
 
-                    var client = fastify.whatsappManager.getClient(request.shipperId);
+                    var client = fastify.whatsappManager.getClient(request.clientId);
                     if (!client) {
-                        fastify.log.error(`Client ${request.shipperId} not found`);
-                        await fastify.whatsappManager.createClient(request.shipperId);
-                        client = fastify.whatsappManager.getClient(request.shipperId);
+                        fastify.log.error(`Client ${request.clientId} not found`);
+                        await fastify.whatsappManager.createClient(request.clientId);
+                        client = fastify.whatsappManager.getClient(request.clientId);
                         if (!client) {
-                            fastify.log.error(`Client ${request.shipperId} not found`);
+                            fastify.log.error(`Client ${request.clientId} not found`);
                             throw new ConnectError(
-                                `Client ${request.shipperId} not found`,
+                                `Client ${request.clientId} not found`,
                                 Code.NotFound
                             );
                         }
                     }
 
                     if (!client.getStatus().isReady && !client.getQRCode()) {
-                        fastify.log.info(`Waiting for QR code for client ${request.shipperId}...`);
+                        fastify.log.info(`Waiting for QR code for client ${request.clientId}...`);
                         await new Promise((resolve) => {
                             const wwebClient = client.getClient();
 
@@ -71,23 +71,23 @@ export default async function connectRoutes(fastify, options) {
                 },
                 async pushWhatsappMessage(request, context) {
                     fastify.log.info(
-                        `Received PushWhatsappMessage: ${request.shipperId} ${request.phone}`
+                        `Received PushWhatsappMessage: ${request.clientId} ${request.phone}`
                     );
 
-                    const client = fastify.whatsappManager.getClient(request.shipperId);
+                    const client = fastify.whatsappManager.getClient(request.clientId);
                     if (!client) {
-                        fastify.log.error(`Client ${request.shipperId} not found`);
+                        fastify.log.error(`Client ${request.clientId} not found`);
                         throw new ConnectError(
-                            `Client ${request.shipperId} not found`,
+                            `Client ${request.clientId} not found`,
                             Code.NotFound
                         );
                     }
 
                     const status = client.getStatus();
                     if (!status.isReady) {
-                        fastify.log.error(`Client ${request.shipperId} is not ready`);
+                        fastify.log.error(`Client ${request.clientId} is not ready`);
                         throw new ConnectError(
-                            `Client ${request.shipperId} is not ready`,
+                            `Client ${request.clientId} is not ready`,
                             Code.FailedPrecondition
                         );
                     }

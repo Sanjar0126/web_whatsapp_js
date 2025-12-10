@@ -27,9 +27,10 @@ async function clearCache() {
 
 
 const fastify = Fastify({
-    http2: true,
+    http2: true, // for connect-rpc
     logger: {
         level: config.logLevel,
+        // pino-pretty is commented, because it is not being downloaded in dockerfile
         // transport: {
         //     target: 'pino-pretty',
         //     options: {
