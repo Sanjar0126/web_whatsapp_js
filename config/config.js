@@ -10,6 +10,9 @@ export const config = {
     corsOrigin: process.env.CORS_ORIGIN || '*',
     nodeEnv: process.env.NODE_ENV || 'development',
 
+    // Auth strategy: 'local' for LocalAuth (filesystem), 'remote' for RemoteAuth (MongoDB GridFS)
+    authStrategy: process.env.AUTH_STRATEGY || 'local',
+
     mongodbHost: process.env.MONGODB_HOST || '127.0.0.1',
     mongodbPort: process.env.MONGODB_PORT || '27017',
     mongodbUser: process.env.MONGODB_USER || '',

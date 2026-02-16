@@ -75,7 +75,8 @@ const start = async () => {
         await clearCache();
         await connectDB();
 
-        const whatsappManager = new WhatsAppClientManager(fastify.log);
+        fastify.log.info(`Using ${config.authStrategy} auth strategy for WhatsApp clients`);
+        const whatsappManager = new WhatsAppClientManager(fastify.log, config.authStrategy);
         await whatsappManager.initialize();
 
         fastify.decorate('whatsappManager', whatsappManager);

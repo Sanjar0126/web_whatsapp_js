@@ -2,9 +2,13 @@ import WhatsAppClient from './client.js';
 import WhatsappClientModel from '../models/whatsapp_client.js';
 
 class WhatsAppClientManager {
-    /** @param {import('pino').Logger} logger */
-    constructor(logger) {
+    /**
+     * @param {import('pino').Logger} logger
+     * @param {'local' | 'remote'} authStrategy
+     */
+    constructor(logger, authStrategy = 'local') {
         this.logger = logger;
+        this.authStrategy = authStrategy;
         /** @type {Map<string, WhatsAppClient>} */
         this.clients = new Map();
     }
@@ -44,7 +48,7 @@ class WhatsAppClientManager {
             }
         }
 
-        const client = new WhatsAppClient(this.logger, clientId);
+        const client = new WhatsAppClient(this.logger, clientId, this.authStrategy);
         client.initialize();
         this.clients.set(clientId, client);
         return client;
@@ -64,7 +68,12 @@ class WhatsAppClientManager {
     async removeClient(clientId) {
         const client = this.clients.get(clientId);
         if (client) {
-            await client.store.delete({ session: clientId });
+            if (client.authStrategy === 'remote' && client.store) {
+                await client.store.delete({ session: clientId });
+            }
+            if (client.client) {
+                await client.client.destroy();
+            }
             this.clients.delete(clientId);
             await WhatsappClientModel.deleteOne({ client_id: clientId });
         }

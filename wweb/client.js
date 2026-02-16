@@ -3,17 +3,19 @@ import MongoStore from './mongo_store.js';
 import mongoose from 'mongoose';
 import WhatsappContact from '../models/whatsapp_contact.js';
 
-const { Client, RemoteAuth } = wwebjs;
+const { Client, RemoteAuth, LocalAuth } = wwebjs;
 
 class WhatsAppClient {
     /**
      * @param {import('pino').Logger} logger 
      * @param {string} clientId 
+     * @param {'local' | 'remote'} authStrategy
      */
-    constructor(logger, clientId) {
+    constructor(logger, clientId, authStrategy = 'local') {
         this.isReady = false;
         this.logger = logger;
         this.clientId = clientId;
+        this.authStrategy = authStrategy;
         /** @type {string | null} */
         this.qrCode = null;
         /** @type {wwebjs.Client | null} */
@@ -22,18 +24,30 @@ class WhatsAppClient {
         this.store = null;
     }
 
-    /** @returns {Promise<void>} */
-    initialize() {
-        this.logger.info(`Initializing WhatsApp Client ${this.clientId}...`);
-
-        this.store = new MongoStore({ mongoose: mongoose });
-
-        this.client = new Client({
-            authStrategy: new RemoteAuth({
+    /**
+     * @returns {wwebjs.LocalAuth | wwebjs.RemoteAuth}
+     */
+    #createAuthStrategy() {
+        if (this.authStrategy === 'remote') {
+            this.store = new MongoStore({ mongoose: mongoose });
+            return new RemoteAuth({
                 store: this.store,
                 backupSyncIntervalMs: 300000,
                 clientId: this.clientId,
-            }),
+            });
+        }
+
+        return new LocalAuth({
+            clientId: this.clientId,
+        });
+    }
+
+    /** @returns {Promise<void>} */
+    initialize() {
+        this.logger.info(`Initializing WhatsApp Client ${this.clientId} with ${this.authStrategy} auth...`);
+
+        this.client = new Client({
+            authStrategy: this.#createAuthStrategy(),
             puppeteer: {
                 headless: true,
                 pipe: true,
